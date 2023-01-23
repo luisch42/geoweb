@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Maps en Visual Studio Code</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <script>
+      function initialize() {
+        var panama = new google.maps.LatLng(8.994231, -79.519930);
+        var mapOptions = {
+          center: panama,
+          zoom: 12
+        }
+        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        
+        // Crea un marcador para la ciudad de Panamá
+        var markerPanama = new google.maps.Marker({
+          position: panama,
+          map: map,
+          title: "Panamá"
+        });
+        
+        // Crea un marcador para otro punto
+        var otroPunto = new google.maps.LatLng(8.965981, -79.531526);
+        var markerOtroPunto = new google.maps.Marker({
+          position: otroPunto,
+          map: map,
+          title: "Otro Punto"
+        });
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map" style="width:500px; height:500px;"></div>
+  </body>
+</html>
