@@ -7,6 +7,17 @@ function add3D() {
         'maxzoom': 14
     });
 
+    map.addSource('icgc-dem', {
+        'type': 'raster-dem',
+        "tiles": [
+        "https://tilemaps.icgc.cat/tileserver/tileserver.php/terreny_icgc_2m_rgb/{z}/{x}/{y}.png"
+      ],
+        'tileSize': 512,
+        'maxzoom': 14
+    });
+
+
+
    map.setFog({});
 
 

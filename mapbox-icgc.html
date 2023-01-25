@@ -1,0 +1,35 @@
+<html lang="es">
+<head>
+    <meta charset='utf-8' />
+    <title>Topogáfico</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
+     <link href='css/estilobase.css' rel='stylesheet' />
+    <script>
+        var map;
+        function init() {
+
+            mapboxgl.accessToken ='pk.eyJ1IjoibHVpc2NoNDIiLCJhIjoiY2w1dDN2aDN1Mm5wYTNpdGVmcmwwcm8wbSJ9.968iFcF38p2HGnOV1WI8aQ';
+               map = new mapboxgl.Map({
+                container: 'map',
+                style: 'https://geoserveis.icgc.cat/contextmaps/icgc_mapa_base_gris_simplificat.json',
+                center: [2.16859, 41.3954],
+                zoom: 13,
+                hash: true,
+                pitch: 45,
+                attributionControl: false
+            });
+            map.addControl(new mapboxgl.AttributionControl({
+                compact: true
+            }));
+            map.addControl(new mapboxgl.NavigationControl());
+
+
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id='map'></div>
+</body>
+</html>
