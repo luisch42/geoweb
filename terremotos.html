@@ -1,0 +1,62 @@
+<html>
+    <head>
+    <meta charset='utf-8' />
+    <title>Terremotos</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
+    <link href='css/estilobase.css' rel='stylesheet' />
+
+    <script src='js/utils.js'></script>
+    <script src='js/terremotos.js'></script>
+
+    <script>
+        var map;
+        function init() {
+
+            mapboxgl.accessToken = "pk.eyJ1IjoibHVpc2NoNDIiLCJhIjoiY2w1dDN2aDN1Mm5wYTNpdGVmcmwwcm8wbSJ9.968iFcF38p2HGnOV1WI8aQ";
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/dark-v10',
+                center: [9.746, 40.473],
+                zoom: 5.5,
+                hash: true,
+                pitch: 0,
+                attributionControl: false
+            });
+            map.addControl(new mapboxgl.AttributionControl({
+                compact: true
+            }));
+            map.addControl(new mapboxgl.NavigationControl());           
+
+            map.on("load", function () {
+
+            generarPeticionTerremotos();
+
+            }); // fin load mapa
+
+            map.on("zoomend", function () {
+
+             generarPeticionTerremotos();
+            });
+  
+            map.on("moveend", function () {
+
+             generarPeticionTerremotos();
+            });
+
+
+            
+        } //fin init
+
+    </script>
+    </head>
+    <div>
+        Terremotos
+    </div>
+
+    <body onload="init()">
+        <div id='map'></div>
+    </body>
+
+    </html>

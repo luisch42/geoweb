@@ -1,4 +1,4 @@
- function terremotosGeonamesToGeoJSON(respuestaGeonames){
+function terremotosGeonamesToGeoJSON(respuestaGeonames){
 
     var geoJSON ={
         "type": "FeatureCollection",
@@ -101,4 +101,3 @@
     
     } // fin funcion
     
-
