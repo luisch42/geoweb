@@ -1,47 +1,55 @@
 <html>
     <head>
     <meta charset='utf-8' />
-    <title>Mapa 3D</title>
+    <title>CATASTRO</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
     <link href='css/estilobase.css' rel='stylesheet' />
 
-    <script src='js/3d.js'></script>
+    <script src='js/edificios.js'></script>
+    <script src='parcelas.js'></script>
+
+
     <script>
-        //Añadir vuestor token!!
+        //Añadir vuestor token y/o estilo !!
         var map;
         function init() {
             mapboxgl.accessToken =
                 'pk.eyJ1IjoibHVpc2NoNDIiLCJhIjoiY2w1dDN2aDN1Mm5wYTNpdGVmcmwwcm8wbSJ9.968iFcF38p2HGnOV1WI8aQ';
              map = new mapboxgl.Map({
                 container: 'map',
-                style: 'mapbox://styles/luisch42/clcz2spr0001814s7bwtz7snj',
-                center: [9.002009, -79.514195],
-                zoom: 12,
+                style: 'mapbox://styles/luisch42/clcz2ob7o001l15qjnniuenso',
+                center: [9.04654,-79.41777],
+                zoom: 15,
                 attributionControl: false,
                 pitch: 45,
-                projection:'globe',
                 hash: true
             });
 
             map.addControl(new mapboxgl.AttributionControl({ compact: true }));
             map.addControl(new mapboxgl.NavigationControl());
-            map.addControl(new mapboxgl.GeolocateControl({
-                positionOptions: {
-                enableHighAccuracy: true
-                },
-                trackUserLocation: true
-            }));
 
+            map.on('load', function () {
+
+             addEdificiosCapa();
+
+            addPopupToMapEdificios("edificios");
+
+
+            }); //fin onload
 
 
             map.on('load', function () {
-             add3D();
-            }); 
-            //fin onload
+
+            addParcelasCapa();
+
+            addPopupToMapParcelas("Parcelas");
 
 
+            }); //fin onload
+
+            
         } // final init
     </script>
     </head>
