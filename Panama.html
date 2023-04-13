@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa de Panamá</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.min.js"></script>
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.0/mapbox-gl-geocoder.css" type="text/css">
+
+
+
+  <style>
+    body { margin: 0; padding: 0; }
+    .header { position: relative; z-index: 2; }
+    
+
+     /* Estilos para el título */
+     h1 {
+      text-align: center;
+      font-size: 32px;
+      color: #333;
+    }
+
+    #info-table {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      background-color: white;
+      padding: 10px;
+      font-size: 12px;
+      border: 1px solid black;
+      display: none; /* Ocultar tabla inicialmente */
+    }
+
+    #map-container {
+     display: flex;
+     flex-wrap: wrap;
+    }
+
+    #map {
+    flex: 1 1 60%;
+    height: 100vh;
+    }
+
+    #grafica-container {
+    position: absolute;
+    top: 120px;
+    right: 120px;
+    width: 150px;
+    height: 150px;
+    background-color: white;
+    z-index: 1;
+    border: 1px solid black;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+   }
+
+   #grafica-pastel {
+     margin: 10px;
+    }
+
+   td.maximo {
+    background-color: #FFC300;
+    font-weight: bold;
+    }
+
+   td.maximo ~ td.maximo {
+    background-color: #3498DB;
+    font-weight: bold;
+   }
+
+
+   
+
+
+
+  </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="text-align: center;">Población de Panamá por Provincias <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Flag_of_Panama.svg" alt="Bandera de Panamá" style="width: 50px; height: auto; vertical-align: middle;"></h1>
+      </div>
+
+    <button id="toggle-provincias" style="position: absolute; top: 50px; left: 10px; z-index: 2;">Mostrar/Ocultar Provincias</button>
+
+ 
+    <div id="map"></div>
+
+    <div id="grafica-container">
+      <canvas id="grafica-pastel" width="300" height="300"></canvas>
+    </div>
+
+    <div id="info-table" style="display: none; position: fixed; left: 0; bottom: 0; background: white; padding: 10px; z-index: 1;">
+      <h3 id="province-name"></h3>
+      <table id="population-table" border="1" cellpadding="5" cellspacing="0" style="font-size: 12px; width: 100%;">
+        <thead>
+          <tr>
+            <th>Edad</th>
+            <th>Femenina</th>
+            <th>Masculina</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+
+          
+     
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/app2.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+</body>
+</html>

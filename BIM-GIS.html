@@ -1,62 +1,71 @@
 <html>
-    <head>
-    <meta charset='utf-8' />
-    <title>CATASTRO</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet' />
-    <link href='css/estilobase.css' rel='stylesheet' />
 
-    <script src='js/edificios.js'></script>
-    <script src='parcelas.js'></script>
+<head>
+    <meta charset='utf-8' />
+    <title>Parcelas</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css' rel='stylesheet' />
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+
+    <link href='css/estilobase.css' rel='stylesheet' />
+     <script src='js/utils.js'></script>
+
+     <script src='js/parcelas.js'></script>
+     <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
 
 
     <script>
         //Añadir vuestor token y/o estilo !!
         var map;
+        var parcelasGeoJSON;
         function init() {
             mapboxgl.accessToken =
                 'pk.eyJ1IjoibHVpc2NoNDIiLCJhIjoiY2w1dDN2aDN1Mm5wYTNpdGVmcmwwcm8wbSJ9.968iFcF38p2HGnOV1WI8aQ';
-             map = new mapboxgl.Map({
+            map = new mapboxgl.Map({
                 container: 'map',
-                style: 'mapbox://styles/luisch42/clcz2ob7o001l15qjnniuenso',
-                center: [9.04654,-79.41777],
-                zoom: 15,
+                style: 'mapbox://styles/mapbox/dark-v10',
+                center: [-79.3469274, 9.0752219],
+                zoom: 12,
                 attributionControl: false,
-                pitch: 45,
                 hash: true
+                
             });
 
-            map.addControl(new mapboxgl.AttributionControl({ compact: true }));
+            map.addControl(new mapboxgl.AttributionControl({
+                compact: true
+            }));
             map.addControl(new mapboxgl.NavigationControl());
 
-            map.on('load', function () {
+            map.addControl(
+                new MapboxGeocoder({
+                accessToken: mapboxgl.accessToken,
+                mapboxgl: mapboxgl,
+                localGeocoder:buscarparcelas,
+                collapsed:true
+                }));
 
-             addEdificiosCapa();
+            map.on("load", function () {
 
-            addPopupToMapEdificios("edificios");
-
-
-            }); //fin onload
-
-
-            map.on('load', function () {
-
-            addParcelasCapa();
-
-            addPopupToMapParcelas("Parcelas");
+          // reutilizamos funcion de utils para obtener geojson
+             enviarPeticion("datos/parcelas.geojson").then(function (datos) {
+             parcelasGeoJSON = datos;
+             addparcelas();
+             addPopupToMap("parcelas");
+             addparcelasCercanas();
+            }); //fin peticio
 
 
-            }); //fin onload
+}); //fin load
 
-            
         } // final init
     </script>
-    </head>
+</head>
 
-    <body onload="init()">
+<body onload="init()">
+    <div id="map"></div>
+</body>
 
-        <div id="map"></div>
-    </body>
-
-    </html>
+</html>

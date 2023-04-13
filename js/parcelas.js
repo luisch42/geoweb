@@ -1,41 +1,106 @@
-function addParcelasCapa {
+function addparcelas() {
 
-    map.addSource("Parcelas_source", {
-        "type": "vector",
-        "url": "luisch42.0p6uzja8"  // mapbox://Nuestor ID Tileset
-
-    }); //fin map source
-
+    //var url = 'datos/farmacias.geojson';
+    var url = parcelasGeoJSON;
+    map.addSource('parcelas', {
+        type: 'geojson',
+        data: url
+    });
 
     map.addLayer({
-    "id": "Parcelas",
-    "type": "fill-extrusion",
-    "source": "Parcelas_source",
-    "source-layer": "lotes_demo-boiakk", // Nuestro nombre Tileset
-    "maxzoom": 21,
-    "minzoom": 15,
-   // "filter": [">", "numberOfFl", 0],
-    "paint": {
-        "fill-extrusion-color": [
-            "interpolate", ["linear"], ["number", ["get", "parcelas_n"]],
-            0, "#FFFFFF",
-            1, "#e6b03d",
-            2, "#e6b03d",
-            6, "#3de66d",
-            9, "#3de6b1",
-            12, "#22ecf0",
-            15, "#14b1fd",
-            20, "#3d73e6",
-            40, "#123a8f",
-            80, "#ce2f7e",
-            100, "transparent"
+        'id': 'parcelas',
+        'type': 'Polygon',
+        'source': 'parcelas',
+        
+    });
 
-        ],
-        "fill-extrusion-height": ["*", 2, ["to-number", ["get", "parcelas_n"]]],
-        "fill-extrusion-opacity": 0.9
+
+} // fin funcion
+
+
+function buscarparcelas(valor) {
+
+    var resultadosparcelas = [];
+
+   // console.info(farmaciasGeoJSON);
+    for (var i = 0; i < parcelasGeoJSON.features.length; i++) {
+
+        var feature = parcelasGeoJSON.features[i];
+
+        if (feature.properties.Name && 
+            feature.properties.Name
+            .toLowerCase()
+            .includes(valor.toLowerCase())
+        ) {
+
+            feature['place_name'] = `💊 ${feature.properties.Name}`;
+            feature['center'] = feature.geometry.coordinates;
+            feature['place_type'] = ['place'];
+            resultadosparcelas.push(feature);
+        }
     }
-}
-//,"road-label"
-);  
+    return resultadosparcelas;
+} // fin funcion
 
-} //fin funcion
+function addFarmaciasCercanas() {
+
+    map.addSource('farmacias_sel', {
+        type: 'geojson',
+        data: {
+            'type': 'FeatureCollection',
+            'features': []
+        }
+    });
+
+    map.addLayer({
+        'id': 'parcelas_sel',
+        'type': 'fill',
+        'source': 'parcelas_sel',
+       
+    });
+
+   map.addLayer({
+        "id": "parcelas_sel_text",
+        "type": "vector",
+        "source": "parcelas_sel",
+        "layout": {
+          'text-field': ['concat',['get', 'distancia'],' m'],
+          "text-size": 15,
+          'text-offset': [0, 1.3],
+          'text-anchor': 'left'
+        },
+        'paint': {
+            'text-color': '#f909b5',
+            'text-halo-color': '#333333',
+            'text-halo-width': 1
+        }
+      });
+
+    map.on("click", "parcelas", function (e) {
+
+        var puntoClick = turf.point([e.lngLat.lng, e.lngLat.lat]);
+        var ff = parcelasGeoJSON;
+
+        for (var i = 0; i < ff.features.length; i++) {
+
+            var puntoparcelas = turf.point(ff.features[i].geometry.coordinates);
+            var distancia = turf.distance(puntoClick, puntoparcelas, { units: 'meters' });
+            ff.features[i].properties.distancia = parseInt(distancia);
+
+        }
+
+        ff.features.sort(function (a, b) {
+            return a.properties.distancia - b.properties.distancia
+        });
+
+        map.getSource('parcelas_sel').setData(turf.featureCollection(ff.features.slice(1, 6)));
+
+    })
+
+
+
+} // fin funcion
+
+
+ 
+

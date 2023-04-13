@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Dibujar ruta en mapa</title>
+    <style>
+      #map-canvas {
+        height: 500px;
+        width: 100%;
+      }
+    </style>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEB1plSzdQgv2oSvyvPT99BHmhJpG8Cys&v=3.exp"></script>
+	<script src="js/js.js"></script>
+	<script type="text/javascript">
+	   
+		var map;
+		function initialize() {
+			var mapOptions = {
+				zoom: 16,
+				maxZoom: 18,
+				minZoom: 15,
+				scaleControl: true,
+				mapTypeId: google.maps.MapTypeId.TERRAIN,
+				center: new google.maps.LatLng(8.998518072412182, -79.51641860906777)
+			};
+			map = new google.maps.Map(document.getElementById('map-canvas'),
+				mapOptions);
+	
+			
+		
+				initMap();
+	
+		};
+	
+		google.maps.event.addDomListener(window, 'load', initialize);
+	</script>
+  </head>
+  <body>
+
+    <!--Mapa Inicio -->
+
+<div id="map-canvas"></div>
+
+<!--Mapa Final -->
+    
+    
+
+  </body>
+</html>

@@ -1,0 +1,106 @@
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Población</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css' rel='stylesheet' />
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.3.0/mapbox-gl-draw.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.3.0/mapbox-gl-draw.css' type='text/css' />
+
+    <script src="https://unpkg.com/flatgeobuf@3.24.0/dist/flatgeobuf-geojson.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
+
+    <link href='css/estilobase.css' rel='stylesheet' />
+
+     <script src='js/utils.js'></script>
+     <script src='js/poblacion.js'></script>
+
+
+    <script>
+        //Añadir vuestor token y/o estilo !!
+        var map;
+        var url = "./datos/kontur_population_ES_20220630.fgb";
+        var minZoom = 8;
+        var draw;
+        function init() {
+            mapboxgl.accessToken =
+                'pk.eyJ1IjoibHVpc2NoNDIiLCJhIjoiY2w1dDN2aDN1Mm5wYTNpdGVmcmwwcm8wbSJ9.968iFcF38p2HGnOV1WI8aQ';
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/satellite-streets-v10',
+                center: [2.16859, 41.3954],
+                zoom: 10,
+                attributionControl: false,
+                hash: true
+            });
+
+            map.addControl(new mapboxgl.AttributionControl({
+                compact: true
+            }));
+            map.addControl(new mapboxgl.NavigationControl());
+
+            map.addControl(
+                new MapboxGeocoder({
+                accessToken: mapboxgl.accessToken,
+                mapboxgl: mapboxgl,
+                collapsed:true,
+                countries:'ES'
+                }));
+
+
+                draw = new MapboxDraw({
+                displayControlsDefault: false,
+                controls: {
+                    point: true,
+                    polygon: true,
+                    trash: true
+                }
+            });
+            map.addControl(draw);
+
+            map.on('draw.modechange', function (e) {
+                //solo una geometria en el mapa
+                var ff = draw.getAll();
+                if (ff.features.length == 2) {
+                    draw.delete(ff.features[0].id);
+                    borraBuffer();
+                }
+            }); 
+
+            map.on("load", function () {
+                getFeaturesFGB(url, minZoom);
+            });
+
+            map.on("moveend", function () {
+                getFeaturesFGB(url, minZoom);
+            });
+
+            map.on("zoomend", function () {
+                getFeaturesFGB(url, minZoom);
+            });    
+            
+            map.on('draw.create',function(e){             
+                gestionCalculoPoblacion(e.features[0],minZoom);
+            });
+
+            map.on('draw.update',function(e){             
+                gestionCalculoPoblacion(e.features[0],minZoom);
+            });
+
+        } // final init
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="panelTopIzquierda">
+        <label id="pop"></label>
+    </div>
+    <div id="map"></div>
+</body>
+
+</html>

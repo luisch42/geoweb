@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<title>Demo Master GIS</title>
+		<style>
+			#map-canvas { height:100%; }
+
+			div.station p { font-family: Arial, Helvetica, sans-serif; font-size:16px;  }
+		</style>
+		<script src="bicing_stations.js"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEB1plSzdQgv2oSvyvPT99BHmhJpG8Cys&v=3.exp"></script>
+		<script type="text/javascript">
+			var map;
+			function initialize() {
+				var mapOptions = {
+					zoom: 16,
+					center: new google.maps.LatLng(41.39774503931714, 2.1964028477123065),
+				};
+				map = new google.maps.Map(document.getElementById('map-canvas'),
+					mapOptions);
+				
+				for (i = 0; i < bicingStations.length ; i++ )
+				{
+					createStation(i);
+				}					
+			}
+
+			function createStation(index) {
+				var point = new google.maps.LatLng(bicingStations[index].latitude, bicingStations[index].longitude);
+				var pOptions = {
+					position: point, 
+					map: map, 
+					title: bicingStations[index].streetName
+				};
+				var markerStation = new google.maps.Marker(pOptions);
+
+				var infoWOpt = {
+						content: '<div class="station">'
+									+ '<h2>' + bicingStations[index].streetName + ', num. ' + bicingStations[index].streetNumber +  '</h2>' 
+									+ '<p><strong>Id:</strong> ' + bicingStations[index].id + '</p>'
+									+ '<p><strong>Libres:</strong> ' + bicingStations[index].slots + '</p>'
+									+ '<p><strong>Disponibles:</strong> ' + bicingStations[index].bikes + '</p>'
+								+ '</div>'
+				};
+				var infoW = new google.maps.InfoWindow(infoWOpt);	
+				google.maps.event.addListener(markerStation, 'click', function (event) {
+					infoW.open(map, markerStation);
+				});			
+			}
+
+			google.maps.event.addDomListener(window, 'load', initialize);
+		</script>
+	</head>
+	<body>
+		<div id="map-canvas"></div>
+	</body>
+</html>
